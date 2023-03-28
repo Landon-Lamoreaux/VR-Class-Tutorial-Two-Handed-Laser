@@ -22,11 +22,57 @@ public class DoubleGrab : MonoBehaviour
 
     void OnGrab(GameObject o, GameObject controller)
     {
-        Debug.Log("In on Grab Object");
+        // Not a monitored object.
+        if (!(o == grabPoint1 || o == grabPoint2))
+            return;
+        // No item selected.
+        if (first == null)
+        {
+            first = new Tuple<GameObject, GameObject>(o, controller);
+        }
+        else if ((first != null && grabPoint1 == grabPoint2) || o != first.Item1)
+        {
+            second = new Tuple<GameObject, GameObject>(o, controller);
+            // Both hands have something, trigger!
+            if (DoubleGrabObject != null)
+            {
+                DoubleGrabObject(first.Item1, first.Item2, second.Item1, second.Item2);
+            }
+        }
     }
     void OnRelease(GameObject o, GameObject controller)
     {
-        Debug.Log("In on Release Object");
+        // Sanity check.
+        if (first == null)
+        {
+            return;
+        }
+        // Last release.
+        else if (o == first.Item1 && second == null)
+        {
+            first = null;
+        }
+        // Second grab is still active, move it to first.
+        else if (o == first.Item1 && second != null)
+        {
+            first = second;
+            second = null;
+            // Went from both hands having something, to one, trigger!
+            if (DoubleReleaseObject != null)
+            {
+                DoubleReleaseObject(null, null, first.Item1, first.Item2);
+            }
+        }
+        // First grab is still active, remove second.
+        else
+        {
+            second = null;
+            //went from both hands having something, to one, trigger!
+            if (DoubleReleaseObject != null)
+            {
+                DoubleReleaseObject(first.Item1, first.Item2, null, null);
+            }
+        }
     }
 
     // Start is called before the first frame update.

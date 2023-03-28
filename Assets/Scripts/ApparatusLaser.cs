@@ -32,8 +32,30 @@ public class ApparatusLaser : MonoBehaviour
 
     public void SetColor(Color c)
     {
-
+        line.startColor = c;
+        line.endColor = c;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name.Contains("RedLens"))
+        {
+            SetColor(Color.red);
+        }
+        else if (collision.gameObject.name.Contains("GreenLens"))
+        {
+            SetColor(Color.green);
+        }
+        else if (collision.gameObject.name.Contains("BlueLens"))
+        {
+            SetColor(Color.blue);
+        }
+        else if (collision.gameObject.name.Contains("WhiteLens"))
+        {
+            SetColor(Color.white);
+        }
+    }
+
     void Update()
     {
         bounds = GetComponent<Collider>().bounds;

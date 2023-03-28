@@ -10,6 +10,7 @@ public class Grab : MonoBehaviour
     private InputAction release;
     private List<GameObject> inRange = new List<GameObject>();
     private GameObject inHand = null;
+
     public delegate void ObjectEvent(GameObject obj, GameObject controller);
     public event ObjectEvent GrabObject;
     public event ObjectEvent ReleaseObject;
